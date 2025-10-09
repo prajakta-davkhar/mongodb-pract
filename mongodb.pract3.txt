@@ -1,0 +1,166 @@
+Microsoft Windows [Version 10.0.26100.6725]
+(c) Microsoft Corporation. All rights reserved.
+
+C:\Program Files\MongoDB\Server\8.2\bin>mongosh
+Current Mongosh Log ID: 68e63313d45f30b62ecebea3
+Connecting to:          mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.5.8
+Using MongoDB:          8.2.0
+Using Mongosh:          2.5.8
+
+For mongosh info see: https://www.mongodb.com/docs/mongodb-shell/
+
+------
+   The server generated these startup warnings when booting
+   2025-10-04T16:29:43.652+05:30: Access control is not enabled for the database. Read and write access to data and configuration is unrestricted
+------
+
+test> show dbs
+admin     40.00 KiB
+config    72.00 KiB
+cricket  132.00 KiB
+local     64.00 KiB
+test> use demo1
+switched to db demo1
+demo1> db.createCollection('emp');
+{ ok: 1 }
+demo1> db.emp.insertOne({empid:101,ename:'prajakta',salary:77000,dept:'cs'});
+{
+  acknowledged: true,
+  insertedId: ObjectId('68e6342dd45f30b62ecebea4')
+}
+demo1> db.emp.insertOne({empid:102,ename:'pooja',salary:75000,dept:'cs'});
+{
+  acknowledged: true,
+  insertedId: ObjectId('68e63445d45f30b62ecebea5')
+}
+demo1> db.emp.insertOne({empid:103,ename:'pranat',salary:80000,dept:'IT'});
+{
+  acknowledged: true,
+  insertedId: ObjectId('68e6345fd45f30b62ecebea6')
+}
+demo1>
+
+demo1> db.emp.aggregate([{$group:{_id:null,total_pay:{$sum:'$salary'}}}]);
+[ { _id: null, total_pay: 232000 } ]
+demo1> db.emp.aggregate([{$group:{_id:'dept',total_pay:{$sum:'$salary'}}}]);
+[ { _id: 'dept', total_pay: 232000 } ]
+demo1> db.emp.aggregate([{$group:{_id:'dept',total_pay:{$sum:'$salary'}}}]);
+[ { _id: 'dept', total_pay: 232000 } ]
+demo1>
+
+demo1>
+
+demo1> db.emp.aggregate([{$group:{_id:'$dept',total_pay:{$sum:'$salary'}}}]);
+[ { _id: 'IT', total_pay: 80000 }, { _id: 'cs', total_pay: 152000 } ]
+demo1> db.emp.aggregate([{$group:{_id:null,total_pay:{$min:'$salary'}}}]);
+[ { _id: null, total_pay: 75000 } ]
+demo1> db.emp.aggregate([{$group:{_id:null,total_pay:{$max:'$salary'}}}]);
+[ { _id: null, total_pay: 80000 } ]
+demo1> db.emp.aggregate([{$group:{_id:null,total_pay:{$push:'$salary'}}}]);
+[ { _id: null, total_pay: [ 77000, 75000, 80000 ] } ]
+demo1> db.emp.insertOne({empid:104,ename:'divya',salary:80000,dept:'IT'});
+{
+  acknowledged: true,
+  insertedId: ObjectId('68e63577d45f30b62ecebea7')
+}
+demo1> db.emp.aggregate([{$group:{_id:null,total_pay:{$addToSet:'$salary'}}}]);
+[ { _id: null, total_pay: [ 80000, 77000, 75000 ] } ]
+demo1> db.emp.aggregate([{$group:{_id:null,total_pay:{$push:'$salary'}}}]);
+[ { _id: null, total_pay: [ 77000, 75000, 80000, 80000 ] } ]
+demo1> db.emp.count();
+DeprecationWarning: Collection.count() is deprecated. Use countDocuments or estimatedDocumentCount.
+4
+demo1> db.emp.find();
+[
+  {
+    _id: ObjectId('68e6342dd45f30b62ecebea4'),
+    empid: 101,
+    ename: 'prajakta',
+    salary: 77000,
+    dept: 'cs'
+  },
+  {
+    _id: ObjectId('68e63445d45f30b62ecebea5'),
+    empid: 102,
+    ename: 'pooja',
+    salary: 75000,
+    dept: 'cs'
+  },
+  {
+    _id: ObjectId('68e6345fd45f30b62ecebea6'),
+    empid: 103,
+    ename: 'pranat',
+    salary: 80000,
+    dept: 'IT'
+  },
+  {
+    _id: ObjectId('68e63577d45f30b62ecebea7'),
+    empid: 104,
+    ename: 'divya',
+    salary: 80000,
+    dept: 'IT'
+  }
+]
+demo1> db.emp.find().sort({ename:1});
+[
+  {
+    _id: ObjectId('68e63577d45f30b62ecebea7'),
+    empid: 104,
+    ename: 'divya',
+    salary: 80000,
+    dept: 'IT'
+  },
+  {
+    _id: ObjectId('68e63445d45f30b62ecebea5'),
+    empid: 102,
+    ename: 'pooja',
+    salary: 75000,
+    dept: 'cs'
+  },
+  {
+    _id: ObjectId('68e6342dd45f30b62ecebea4'),
+    empid: 101,
+    ename: 'prajakta',
+    salary: 77000,
+    dept: 'cs'
+  },
+  {
+    _id: ObjectId('68e6345fd45f30b62ecebea6'),
+    empid: 103,
+    ename: 'pranat',
+    salary: 80000,
+    dept: 'IT'
+  }
+]
+demo1> db.emp.find().sort({ename:-1});
+[
+  {
+    _id: ObjectId('68e6345fd45f30b62ecebea6'),
+    empid: 103,
+    ename: 'pranat',
+    salary: 80000,
+    dept: 'IT'
+  },
+  {
+    _id: ObjectId('68e6342dd45f30b62ecebea4'),
+    empid: 101,
+    ename: 'prajakta',
+    salary: 77000,
+    dept: 'cs'
+  },
+  {
+    _id: ObjectId('68e63445d45f30b62ecebea5'),
+    empid: 102,
+    ename: 'pooja',
+    salary: 75000,
+    dept: 'cs'
+  },
+  {
+    _id: ObjectId('68e63577d45f30b62ecebea7'),
+    empid: 104,
+    ename: 'divya',
+    salary: 80000,
+    dept: 'IT'
+  }
+]
+demo1>
