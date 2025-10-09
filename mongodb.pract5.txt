@@ -1,0 +1,27 @@
+from pymongo import MongoClient
+client = MongoClient("mongodb://localhost:27017")
+db_input = input("Enter the database name: ")
+db = client[db_input]
+db_collection = input("Enter collection name: ")
+collection = db[db_collection]
+print("Collection created")
+id=int(input("enter id"))
+name=input("enter name")
+collection.insert_one({"id": id, "name": name})
+print("Document inserted successfully")
+record={"id":id,"name":name}
+collection.insert_one(record)
+
+
+Collection created
+Document inserted successfully
+InsertOneResult(ObjectId('68e74c0dfa2bb166a9f9a9a5'), acknowledged=True)
+
+_id:68e74b78fa2bb166a9f9a9a2
+id:101
+name:"prajakta"
+
+
+_id:68e74c0dfa2bb166a9f9a9a4
+id:102
+name:"pooja"
